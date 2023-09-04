@@ -55,7 +55,8 @@ enrichMeSH <- function(gene,
                              )
     meshdb <- get_meshdb(meshdbVersion = meshdbVersion)
     id <- res@result$ID
-    mesh2name <- select(meshdb, keys=id, columns=c('MESHID', 'MESHTERM'), keytype='MESHID')
+    mesh2name <- select(
+        meshdb, keys=id, columns=c('MESHID', 'MESHTERM'), keytype='MESHID')
     res@result$Description <- mesh2name[match(id, mesh2name[,1]), 2]
     res@organism <- get_organism(MeSHDb)
     res@ontology <- "MeSH"
@@ -72,7 +73,12 @@ get_MeSH_data <- function(MeSHDb, database, category) {
         mesh <- get("meshtable", envir = .meshesenv)
     } else {
         ## db <- get_fun_from_pkg(MeSHDb, MeSHDb)
-        mesh <- select(MeSHDb, keys=database, columns = c("GENEID", "MESHID","MESHCATEGORY"), keytype = "SOURCEDB")
+        mesh <- select(
+            MeSHDb, 
+            keys=database, 
+            columns = c("GENEID", "MESHID","MESHCATEGORY"), 
+            keytype = "SOURCEDB"
+        )
         assign("meshtable", mesh, envir = .meshesenv)
     }
 
@@ -90,8 +96,12 @@ get_MeSH_data <- function(MeSHDb, database, category) {
     mesh2gene <- mesh[, c(2,1)]
 
     ## meshdb <- get_fun_from_pkg("MeSH.db", "MeSH.db")
-    ## mesh2name <- select(meshdb, keys=unique(mesh2gene[,1]), columns=c('MESHID', 'MESHTERM'), keytype='MESHID')
+    ## mesh2name <- select(
+    ##     meshdb,
+    ##     keys=unique(mesh2gene[,1]),
+    ##     columns=c('MESHID', 'MESHTERM'),
+    ##     keytype='MESHID'
+    ## )
 
     build_Anno(mesh2gene)
 }
-
